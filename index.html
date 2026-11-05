@@ -70,14 +70,42 @@
     .stat-number { font-variant-numeric:tabular-nums; letter-spacing:-.04em; }
     .progress-track { height:8px; border-radius:999px; background:#eadfd2; overflow:hidden; }
     .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#a52a25,#e0b34c); transition:width .35s ease; }
-    .flip-scene { perspective:1400px; width:100%; min-height:390px; cursor:pointer; outline:none; }
-    .flip-card { position:relative; width:100%; min-height:390px; transform-style:preserve-3d; -webkit-transform-style:preserve-3d; transition:transform .68s cubic-bezier(.2,.72,.18,1); will-change:transform; }
-    .flip-card.is-flipped { transform:rotateY(180deg); -webkit-transform:rotateY(180deg); }
-    .flip-face { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.4rem; border-radius:28px; backface-visibility:hidden; -webkit-backface-visibility:hidden; overflow:hidden; isolation:isolate; }
-    .flip-front { transform:rotateY(0deg) translateZ(1px); -webkit-transform:rotateY(0deg) translateZ(1px); color:#fff8ee; background:radial-gradient(circle at 80% 15%,rgba(244,206,129,.18),transparent 26%),linear-gradient(145deg,#a72c26 0%,#7e1d20 60%,#511b1d 100%); border:1px solid rgba(255,239,205,.2); box-shadow:0 20px 45px rgba(114,31,28,.2); }
-    .flip-front:before { content:'';position:absolute;inset:13px;border:1px solid rgba(247,216,147,.24);border-radius:20px;pointer-events:none; }
-    .flip-back { transform:rotateY(180deg) translateZ(1px); -webkit-transform:rotateY(180deg) translateZ(1px); color:#39251e; background:radial-gradient(circle at 90% 8%,rgba(242,215,147,.5),transparent 26%),linear-gradient(145deg,#fffdf7,#f5eadd); border:1px solid rgba(201,161,94,.42); box-shadow:0 20px 45px rgba(86,49,22,.1); }
-    .flip-back:before { content:'';position:absolute;inset:13px;border:1px solid rgba(185,142,70,.27);border-radius:20px;pointer-events:none; }
+    .flip-scene { perspective: 1400px; width: 100%; min-height: 390px; cursor: pointer; outline: none; }
+    .flip-card { position: relative; width: 100%; min-height: 390px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform .68s cubic-bezier(.2,.72,.18,1); will-change: transform; }
+    .flip-card.is-flipped { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
+    
+    .flip-face { 
+      position: absolute; 
+      inset: 0; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 1.4rem; 
+      border-radius: 28px; 
+      backface-visibility: hidden; 
+      -webkit-backface-visibility: hidden; 
+      overflow: hidden; 
+      isolation: isolate; 
+    }
+    
+    .flip-front { 
+      transform: rotateY(0deg); 
+      -webkit-transform: rotateY(0deg); 
+      color: #fff8ee; 
+      background: radial-gradient(circle at 80% 15%,rgba(244,206,129,.18),transparent 26%),linear-gradient(145deg,#a72c26 0%,#7e1d20 60%,#511b1d 100%); 
+      border: 1px solid rgba(255,239,205,.2); 
+      box-shadow: 0 20px 45px rgba(114,31,28,.2); 
+    }
+    
+    .flip-back { 
+      transform: rotateY(180deg); 
+      -webkit-transform: rotateY(180deg); 
+      color: #39251e; 
+      background: radial-gradient(circle at 90% 8%,rgba(242,215,147,.5),transparent 26%),linear-gradient(145deg,#fffdf7,#f5eadd); 
+      border: 1px solid rgba(201,161,94,.42); 
+      box-shadow: 0 20px 45px rgba(86,49,22,.1); 
+    }
     .card-watermark { position:absolute;right:22px;bottom:-48px;font-family:'Noto Sans SC',sans-serif;font-size:220px;line-height:1;color:rgba(255,255,255,.045);pointer-events:none; }
     .tianzi { background-color:#fffdf8; background-image:linear-gradient(to right,rgba(200,92,76,.34) 1px,transparent 1px),linear-gradient(to bottom,rgba(200,92,76,.34) 1px,transparent 1px),linear-gradient(45deg,transparent calc(50% - .7px),rgba(207,117,100,.24) 50%,transparent calc(50% + .7px)),linear-gradient(-45deg,transparent calc(50% - .7px),rgba(207,117,100,.24) 50%,transparent calc(50% + .7px)),linear-gradient(to right,transparent calc(50% - .6px),rgba(207,117,100,.25) 50%,transparent calc(50% + .6px)),linear-gradient(to bottom,transparent calc(50% - .6px),rgba(207,117,100,.25) 50%,transparent calc(50% + .6px)); background-size:100% 100%; }
     .modal-backdrop { position:fixed;inset:0;background:rgba(39,22,20,.5);backdrop-filter:blur(7px);z-index:80;display:flex;align-items:center;justify-content:center;padding:1rem; }
