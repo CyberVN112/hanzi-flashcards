@@ -70,23 +70,55 @@
     .stat-number { font-variant-numeric:tabular-nums; letter-spacing:-.04em; }
     .progress-track { height:8px; border-radius:999px; background:#eadfd2; overflow:hidden; }
     .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#a52a25,#e0b34c); transition:width .35s ease; }
-    .flip-scene { perspective: 1400px; width: 100%; min-height: 390px; cursor: pointer; outline: none; }
-    .flip-card { position: relative; width: 100%; min-height: 390px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform .68s cubic-bezier(.2,.72,.18,1); will-change: transform; }
-    .flip-card.is-flipped { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
-    
-    .flip-face { 
-      position: absolute; 
-      inset: 0; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      padding: 1.4rem; 
-      border-radius: 28px; 
-      backface-visibility: hidden; 
-      -webkit-backface-visibility: hidden; 
-      overflow: hidden; 
-      isolation: isolate; 
+    /* Cross-browser 3D flashcard: explicit dimensions + preserved 3D context. */
+    .flip-scene {
+      -webkit-perspective: 1400px;
+      perspective: 1400px;
+      -webkit-perspective-origin: 50% 50%;
+      perspective-origin: 50% 50%;
+      width: 100%;
+      height: 390px;
+      min-height: 390px;
+      cursor: pointer;
+      outline: none;
+      position: relative;
+    }
+    .flip-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 390px;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-transition: -webkit-transform .68s cubic-bezier(.2,.72,.18,1);
+      transition: transform .68s cubic-bezier(.2,.72,.18,1);
+      will-change: transform;
+    }
+    .flip-card.is-flipped {
+      -webkit-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+    }
+
+    .flip-face {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.4rem;
+      border-radius: 28px;
+      -webkit-backface-visibility: hidden !important;
+      backface-visibility: hidden !important;
+      overflow: hidden;
+      /* Do not use isolation:isolate here: it can flatten 3D descendants in some engines. */
     }
     
     .flip-front { 
@@ -124,7 +156,7 @@
     @keyframes softIn { from{opacity:.3}to{opacity:1} }
     .card-enter { animation:softIn .25s ease both; }
     .select-clean { appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%23886655' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85rem center;padding-right:2.4rem; }
-    @media(max-width:640px) { .flip-scene,.flip-card{min-height:355px}.flip-face{padding:1.15rem}.card-watermark{font-size:170px}.modal-backdrop{padding:.55rem}.modal-panel{max-height:calc(100vh - 1.1rem);border-radius:20px}.btn{padding:.65rem .82rem;font-size:.78rem}.writer-tile{width:53px;height:53px} }
+    @media(max-width:640px) { .flip-scene,.flip-card{height:355px;min-height:355px}.flip-face{padding:1.15rem}.card-watermark{font-size:170px}.modal-backdrop{padding:.55rem}.modal-panel{max-height:calc(100vh - 1.1rem);border-radius:20px}.btn{padding:.65rem .82rem;font-size:.78rem}.writer-tile{width:53px;height:53px} }
   </style>
 </head>
 <body class="font-sans antialiased">
@@ -391,7 +423,7 @@
     els.cardArea.classList.remove('hidden');els.emptyStudy.classList.add('hidden');els.emptyStudy.classList.remove('flex');[els.prevBtn,els.nextBtn,els.flipBtn,els.speakBtn,els.writeBtn,els.knownBtn,els.reviewBtn].forEach(b=>b.disabled=false);
     const frontText=reverse?word.meaning:word.hanzi;els.frontMain.textContent=frontText;els.frontMain.style.fontFamily=reverse?'Manrope, sans-serif':"'Noto Sans SC',sans-serif";els.frontMain.style.fontSize=reverse?'clamp(1.8rem,5vw,3.3rem)':'clamp(3.8rem,10vw,6.4rem)';els.frontHint.textContent=reverse?'Nhớ chữ Hán và pinyin tương ứng':'Chạm vào thẻ để khám phá nghĩa';els.watermarkFront.textContent=reverse?'义':'中';els.watermarkBack.textContent=word.hanzi.slice(0,1);
     els.backHanzi.textContent=reverse?word.hanzi:word.hanzi;els.backPinyin.textContent=word.pinyin||'Chưa có pinyin';els.backMeaning.textContent=reverse?'':word.meaning;els.backMeaning.classList.toggle('hidden',reverse);els.backExample.textContent=word.example||'';
-    els.flipCard.classList.toggle('is-flipped',isFlipped);els.reverseBtn.classList.toggle('btn-gold',reverse);els.reverseBtn.classList.toggle('btn-light',!reverse);els.reverseBtn.setAttribute('aria-pressed',String(reverse));els.knownBtn.classList.toggle('opacity-50',word.status==='known');els.reviewBtn.classList.toggle('opacity-50',word.status==='review');
+    els.flipCard.classList.toggle('is-flipped',isFlipped);els.flipScene.setAttribute('aria-pressed',String(isFlipped));els.flipScene.setAttribute('aria-label',isFlipped?'Bấm để lật về mặt chữ Hán':'Bấm để lật thẻ');els.reverseBtn.classList.toggle('btn-gold',reverse);els.reverseBtn.classList.toggle('btn-light',!reverse);els.reverseBtn.setAttribute('aria-pressed',String(reverse));els.knownBtn.classList.toggle('opacity-50',word.status==='known');els.reviewBtn.classList.toggle('opacity-50',word.status==='review');
     document.querySelectorAll('.status-filter').forEach(b=>{const active=b.dataset.filter===statusFilter;b.className='status-filter rounded-xl px-3 py-2 text-[11px] font-extrabold '+(active?'bg-cinnabar-800 text-white':'bg-white/80 text-stone-500');});
     if(deck.length===1){els.prevBtn.classList.add('opacity-60');els.nextBtn.classList.add('opacity-60')}else{els.prevBtn.classList.remove('opacity-60');els.nextBtn.classList.remove('opacity-60')}
   }
@@ -411,7 +443,13 @@
     els.studyTab.setAttribute('aria-selected',String(isStudy));els.libraryTab.setAttribute('aria-selected',String(!isStudy));
     window.scrollTo({top:0,behavior:'smooth'});
   }
-  function flipCard(){ if(!currentWord())return;isFlipped=!isFlipped;els.flipCard.classList.toggle('is-flipped',isFlipped); }
+  function flipCard(){
+    if(!currentWord()) return;
+    isFlipped = !isFlipped;
+    els.flipCard.classList.toggle('is-flipped', isFlipped);
+    els.flipScene.setAttribute('aria-pressed', String(isFlipped));
+    els.flipScene.setAttribute('aria-label', isFlipped ? 'Bấm để lật về mặt chữ Hán' : 'Bấm để lật thẻ');
+  }
   function goTo(index){ const deck=getDeck();if(!deck.length)return;currentIndex=(index+deck.length)%deck.length;isFlipped=false;renderStudy();els.flipCard.classList.remove('card-enter');void els.flipCard.offsetWidth;els.flipCard.classList.add('card-enter'); }
   function nextCard(){goTo(currentIndex+1)} function prevCard(){goTo(currentIndex-1)}
   function shuffleDeck(){const deck=getStudyBase();shuffled=true;shuffledIds=deck.map(w=>w.id).sort(()=>Math.random()-.5);currentIndex=0;isFlipped=false;renderStudy();toast('Đã trộn ngẫu nhiên thứ tự thẻ.');}
