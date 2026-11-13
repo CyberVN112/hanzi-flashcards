@@ -70,43 +70,27 @@
     .stat-number { font-variant-numeric:tabular-nums; letter-spacing:-.04em; }
     .progress-track { height:8px; border-radius:999px; background:#eadfd2; overflow:hidden; }
     .progress-fill { height:100%; border-radius:999px; background:linear-gradient(90deg,#a52a25,#e0b34c); transition:width .35s ease; }
-    /* Cross-browser 3D flashcard: explicit dimensions + preserved 3D context. */
+
+    /* ===== Thẻ lật (đã sửa lỗi đảo ngược hình) =====
+       Mỗi mặt tự xoay độc lập bằng perspective(), KHÔNG dùng preserve-3d,
+       nên không bị trình duyệt "làm phẳng" 3D và mặt sau luôn hiển thị đúng chiều. */
     .flip-scene {
-      -webkit-perspective: 1400px;
-      perspective: 1400px;
-      -webkit-perspective-origin: 50% 50%;
-      perspective-origin: 50% 50%;
+      position: relative;
       width: 100%;
       height: 390px;
       min-height: 390px;
       cursor: pointer;
       outline: none;
-      position: relative;
     }
     .flip-card {
       position: relative;
       width: 100%;
       height: 100%;
       min-height: 390px;
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
-      -webkit-transform: translateZ(0);
-      transform: translateZ(0);
-      -webkit-transition: -webkit-transform .68s cubic-bezier(.2,.72,.18,1);
-      transition: transform .68s cubic-bezier(.2,.72,.18,1);
-      will-change: transform;
     }
-    .flip-card.is-flipped {
-      -webkit-transform: rotateY(180deg);
-      transform: rotateY(180deg);
-    }
-
     .flip-face {
       position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      top: 0; right: 0; bottom: 0; left: 0;
       width: 100%;
       height: 100%;
       display: flex;
@@ -115,29 +99,38 @@
       justify-content: center;
       padding: 1.4rem;
       border-radius: 28px;
-      -webkit-backface-visibility: hidden !important;
-      backface-visibility: hidden !important;
       overflow: hidden;
-      /* Do not use isolation:isolate here: it can flatten 3D descendants in some engines. */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transition: -webkit-transform .68s cubic-bezier(.2,.72,.18,1);
+      transition: transform .68s cubic-bezier(.2,.72,.18,1);
+      will-change: transform;
     }
-    
-    .flip-front { 
-      transform: rotateY(0deg); 
-      -webkit-transform: rotateY(0deg); 
-      color: #fff8ee; 
-      background: radial-gradient(circle at 80% 15%,rgba(244,206,129,.18),transparent 26%),linear-gradient(145deg,#a72c26 0%,#7e1d20 60%,#511b1d 100%); 
-      border: 1px solid rgba(255,239,205,.2); 
-      box-shadow: 0 20px 45px rgba(114,31,28,.2); 
+    .flip-front {
+      -webkit-transform: perspective(1400px) rotateY(0deg);
+      transform: perspective(1400px) rotateY(0deg);
+      color: #fff8ee;
+      background: radial-gradient(circle at 80% 15%,rgba(244,206,129,.18),transparent 26%),linear-gradient(145deg,#a72c26 0%,#7e1d20 60%,#511b1d 100%);
+      border: 1px solid rgba(255,239,205,.2);
+      box-shadow: 0 20px 45px rgba(114,31,28,.2);
     }
-    
-    .flip-back { 
-      transform: rotateY(180deg); 
-      -webkit-transform: rotateY(180deg); 
-      color: #39251e; 
-      background: radial-gradient(circle at 90% 8%,rgba(242,215,147,.5),transparent 26%),linear-gradient(145deg,#fffdf7,#f5eadd); 
-      border: 1px solid rgba(201,161,94,.42); 
-      box-shadow: 0 20px 45px rgba(86,49,22,.1); 
+    .flip-back {
+      -webkit-transform: perspective(1400px) rotateY(180deg);
+      transform: perspective(1400px) rotateY(180deg);
+      color: #39251e;
+      background: radial-gradient(circle at 90% 8%,rgba(242,215,147,.5),transparent 26%),linear-gradient(145deg,#fffdf7,#f5eadd);
+      border: 1px solid rgba(201,161,94,.42);
+      box-shadow: 0 20px 45px rgba(86,49,22,.1);
     }
+    .flip-card.is-flipped .flip-front {
+      -webkit-transform: perspective(1400px) rotateY(-180deg);
+      transform: perspective(1400px) rotateY(-180deg);
+    }
+    .flip-card.is-flipped .flip-back {
+      -webkit-transform: perspective(1400px) rotateY(0deg);
+      transform: perspective(1400px) rotateY(0deg);
+    }
+
     .card-watermark { position:absolute;right:22px;bottom:-48px;font-family:'Noto Sans SC',sans-serif;font-size:220px;line-height:1;color:rgba(255,255,255,.045);pointer-events:none; }
     .tianzi { background-color:#fffdf8; background-image:linear-gradient(to right,rgba(200,92,76,.34) 1px,transparent 1px),linear-gradient(to bottom,rgba(200,92,76,.34) 1px,transparent 1px),linear-gradient(45deg,transparent calc(50% - .7px),rgba(207,117,100,.24) 50%,transparent calc(50% + .7px)),linear-gradient(-45deg,transparent calc(50% - .7px),rgba(207,117,100,.24) 50%,transparent calc(50% + .7px)),linear-gradient(to right,transparent calc(50% - .6px),rgba(207,117,100,.25) 50%,transparent calc(50% + .6px)),linear-gradient(to bottom,transparent calc(50% - .6px),rgba(207,117,100,.25) 50%,transparent calc(50% + .6px)); background-size:100% 100%; }
     .modal-backdrop { position:fixed;inset:0;background:rgba(39,22,20,.5);backdrop-filter:blur(7px);z-index:80;display:flex;align-items:center;justify-content:center;padding:1rem; }
@@ -154,7 +147,7 @@
     .toast { animation:toastIn .25s ease both; }
     @keyframes toastIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
     @keyframes softIn { from{opacity:.3}to{opacity:1} }
-    .card-enter { animation:softIn .25s ease both; }
+    .card-enter { animation:softIn .25s ease; }
     .select-clean { appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='%23886655' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85rem center;padding-right:2.4rem; }
     @media(max-width:640px) { .flip-scene,.flip-card{height:355px;min-height:355px}.flip-face{padding:1.15rem}.card-watermark{font-size:170px}.modal-backdrop{padding:.55rem}.modal-panel{max-height:calc(100vh - 1.1rem);border-radius:20px}.btn{padding:.65rem .82rem;font-size:.78rem}.writer-tile{width:53px;height:53px} }
   </style>
